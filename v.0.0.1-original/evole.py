@@ -1,3 +1,7 @@
+"""
+    Evolutionary Computing Module - Modified Original Approach
+    This module will be used to run on Google Colab
+"""
 from random import randint
 from tracker import Tracker
 from individual import Individual
@@ -36,62 +40,72 @@ ACTIVATION_DICT = {
 
 INDIVIDUAL_PARAMETERS = [GENE_LENGTH, ACTIVATION_DICT, DENSE_TYPE_DICT, LEARNING_RATE_DICT]
 
-def tournament_selection(population):
+def tournament_selection(current_population):
+    """
+        Tournament Selection for Parent Pool Selecting Phase
+        Choose 3 random individual from the population with replacement
+        The individual with highest adjusted fitness win the tournament, get added to the pool
+    """
     selected, max_fitness = None, 0
     while selected is None:
-        for i in range(TOURNAMENT_SIZE):
-            contestant = population[randint(0, POPULATION_SIZE - 1)]
+        for _i in range(TOURNAMENT_SIZE):
+            contestant = current_population[randint(0, POPULATION_SIZE - 1)]
             if contestant.adjusted_fitness > max_fitness:
                 selected = contestant
                 max_fitness = contestant.adjusted_fitness
     return selected
 
-def crossover(parent1, parent2):
+def crossover(_parent1, _parent2):
+    """
+        Multipoint crossover for Crossover Phase
+        Split both parent gene into multiple segments
+        Swap segments at odd index, offsprings genes are achieved
+    """
     points_num = randint(MIN_POINTS, MAX_POINTS)
     points = [0]
-    for i in range(points_num):
-        points.append(randint(points[-1] + 1, GENE_LENGTH - (points_num - i)))
+    for _i in range(points_num):
+        points.append(randint(points[-1] + 1, GENE_LENGTH - (points_num - _i)))
     points.append(GENE_LENGTH)
     gene1, gene2 = [], []
-    for i in range(len(points) - 1):
-        if i % 2 == 0:
-            gene1 += parent1.gene[points[i]:points[i + 1]]
-            gene2 += parent2.gene[points[i]:points[i + 1]]
+    for _i in range(len(points) - 1):
+        if _i % 2 == 0:
+            gene1 += _parent1.gene[points[_i]:points[_i + 1]]
+            gene2 += _parent2.gene[points[_i]:points[_i + 1]]
         else:
-            gene1 += parent2.gene[points[i]:points[i + 1]]
-            gene2 += parent1.gene[points[i]:points[i + 1]]
-    children1 = Individual(INDIVIDUAL_PARAMETERS, gene1)
-    children2 = Individual(INDIVIDUAL_PARAMETERS, gene2)
-    return children1, children2
+            gene1 += _parent2.gene[points[_i]:points[_i + 1]]
+            gene2 += _parent1.gene[points[_i]:points[_i + 1]]
+    _children1 = Individual(INDIVIDUAL_PARAMETERS, gene1)
+    _children2 = Individual(INDIVIDUAL_PARAMETERS, gene2)
+    return _children1, _children2
 
-model = Model()
+MODEL = Model()
 
-population = Population(INDIVIDUAL_PARAMETERS, POPULATION_SIZE)
+POPULATION = Population(INDIVIDUAL_PARAMETERS, POPULATION_SIZE)
 
 # Remove all invalid individual (invalid CNN model structure)
-for i in range(POPULATION_SIZE):
-    population.populace[i].evaluate()
-    while population.populace[i].fitness == 0:
-        population.populace[i] = Individual(INDIVIDUAL_PARAMETERS)
-        population.populace[i].evaluate()
-population.calculate_ajusted_fitness()
+for _i in range(POPULATION_SIZE):
+    POPULATION.populace[_i].evaluate()
+    while POPULATION.populace[_i].fitness == 0:
+        POPULATION.populace[_i] = Individual(INDIVIDUAL_PARAMETERS)
+        POPULATION.populace[_i].evaluate()
+POPULATION.calculate_ajusted_fitness()
 
-tracker = Tracker(STOP_CONDITION)
-tracker.update_elitism(population.populace)
+TRACKER = Tracker(STOP_CONDITION)
+TRACKER.update_elitism(POPULATION.populace)
 
-print("Generation " + str(tracker.generation_count))
-population.print()
-tracker.print()
+print("Generation " + str(TRACKER.generation_count))
+POPULATION.print()
+TRACKER.print()
 
 # Population evolution
-for i in range(1, MAXIMUM_GENERATION):
-    print("Generation", i + 1)
-    print("".join(list(map(str, tracker.best_individual.gene))), tracker.best_individual.fitness)
+for _i in range(1, MAXIMUM_GENERATION):
+    print("Generation", _i + 1)
+    print("".join(list(map(str, TRACKER.best_individual.gene))), TRACKER.best_individual.fitness)
 
     # Create parent pool for mating by tournament selection
     pool = []
     for j in range(POPULATION_SIZE):
-        pool.append(tournament_selection(population.populace))
+        pool.append(tournament_selection(POPULATION.populace))
 
     # Create offsrping for next generation by crossover then mutate
     next_generation = []
@@ -102,27 +116,27 @@ for i in range(1, MAXIMUM_GENERATION):
         children2.mutate()
         next_generation += [children1, children2]
     for individual in next_generation:
-        individual.evaluate()
+        individual.evaluate(MODEL)
 
     # Remove the worst individual
     worst, min_fitness = None, 100
-    for i in range(POPULATION_SIZE):
-        if next_generation[i].fitness < min_fitness:
-            worst, min_fitness = i, next_generation[i].fitness
+    for j in range(POPULATION_SIZE):
+        if next_generation[j].fitness < min_fitness:
+            worst, min_fitness = j, next_generation[j].fitness
     del next_generation[worst]
 
     # Add the best individual from the previous generation
-    next_generation.append(tracker.elitism())
+    next_generation.append(TRACKER.elitism())
 
-    population.populace = next_generation
-    population.calculate_ajusted_fitness()
-    tracker.update_elitism(population.populace)
-    tracker.generation_count += 1
-    population.print()
+    POPULATION.populace = next_generation
+    POPULATION.calculate_ajusted_fitness()
+    TRACKER.update_elitism(POPULATION.populace)
+    TRACKER.generation_count += 1
+    POPULATION.print()
 
     # Got 10 generations without improvements
-    if tracker.stop_condition():
+    if TRACKER.stop_condition():
         break
 
 # save_data_to_file(population, tracker)
-tracker.print()
+TRACKER.print()

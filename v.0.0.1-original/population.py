@@ -1,9 +1,18 @@
+"""
+    Population module for Evolutionary Computing
+"""
 from individual import Individual
 
 def count_same_element(array1, array2):
+    """
+        Get how many components both individual have the same value
+    """
     return [array1[i] == array2[i] for i in range(len(array1))].count(True)
 
 def get_similarity(individual1, individual2):
+    """
+        Get the similarity between two individuals
+    """
     nc1 = individual1.get_convol_layers_num()
     nc2 = individual2.get_convol_layers_num()
     nd1 = individual1.get_dense_layers_num()
@@ -12,12 +21,12 @@ def get_similarity(individual1, individual2):
         properies_num = nc1 * 4 + nd1 * 5 + 2
         same_count = 0
 
-        f1, f2 = individual1.get_optimizer(), individual2.get_optimizer()
-        if f1 == f2:
+        function1, function2 = individual1.get_optimizer(), individual2.get_optimizer()
+        if function1 == function2:
             same_count += 1
-        n1 = individual1.get_learning_rate()
-        n2 = individual1.get_learning_rate()
-        if n1 == n2:
+        num1 = individual1.get_learning_rate()
+        num2 = individual1.get_learning_rate()
+        if num1 == num2:
             same_count += 1
 
         ck1 = individual1.get_kernels_num(nc1)
@@ -49,15 +58,22 @@ def get_similarity(individual1, individual2):
         dd2 = individual2.get_dropout(nd2)
         same_count += count_same_element(dd1, dd2)
         return same_count / properies_num
-    else:
-        return 0
+    return 0
 
-class Population(object):
+class Population():
+    """
+        Population class
+        Containing multiple Individual instances
+    """
     def __init__(self, individual_parameters, population_size):
         self.population_size = population_size
         self.populace = [Individual(individual_parameters) for i in range(self.population_size)]
 
     def calculate_ajusted_fitness(self):
+        """
+            Calculate adjusted fitness from main fitness
+            The higher similarity with other individuals, the lower adjusted fitness
+        """
         for i in range(self.population_size):
             similarity_sum = 0
             for j in range(self.population_size):
@@ -69,6 +85,9 @@ class Population(object):
             self.populace[i].adjusted_fitness *= similarity
 
     def print(self):
+        """
+            Print population into
+        """
         for individual in self.populace:
-            print(individual.to_string(), end = " ")
+            print(individual.to_string(), end=" ")
             print(individual.fitness)
