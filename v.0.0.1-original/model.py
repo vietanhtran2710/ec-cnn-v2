@@ -3,6 +3,7 @@
 """
 from sklearn.utils import shuffle
 import tensorflow as tf
+from random import random
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras import layers, models, regularizers, optimizers
 from tensorflow.keras.utils import to_categorical
@@ -65,7 +66,8 @@ class Model():
     """
         Model class to build and train/test neural network from individual components
     """
-    def __init__(self):
+    def __init__(self, test_mode):
+        self.test = test_mode
         self.x_train, self.y_train, self.x_test, self.y_test = load_data()
         self.rgl_dct = {
             0: regularizers.l1(1e-4),
@@ -218,6 +220,8 @@ class Model():
         """
             Get individual fitness by evaluating its model built from components
         """
+        if self.test:
+            return random()
         if not is_valid_model(components["cs"], components["cp"]):
             return 0
         model = self.build_model(components)

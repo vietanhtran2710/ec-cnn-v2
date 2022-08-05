@@ -22,11 +22,11 @@ class Individual():
         if len(args) == 1:
             self.gene = [randint(0, 1) for i in range(self.gene_length)]
         elif len(args) == 2:
-            self.gene = args[0]
+            self.gene = args[1]
         else:
-            self.gene = args[0]
-            self.fitness = args[1]
-            self.adjusted_fitness = args[2]
+            self.gene = args[1]
+            self.fitness = args[2]
+            self.adjusted_fitness = args[3]
 
     def evaluate(self, model):
         """

@@ -7,6 +7,7 @@ from tracker import Tracker
 from individual import Individual
 from population import Population
 from model import Model
+import sys
 
 POPULATION_SIZE = 50
 MAXIMUM_GENERATION = 10
@@ -17,6 +18,7 @@ MAX_POINTS = 10 # Maximum number of points in multipoints crossover
 MUTATION_RATE = 0.015
 ELITE_SIZE = 1
 GENE_LENGTH = 67
+TEST_MODE = True if len(sys.argv) >= 2 else False
 
 LEARNING_RATE_DICT = {
     0: 1 * 10 ** (-5), 1: 5 * 10 ** (-5),
@@ -78,16 +80,16 @@ def crossover(_parent1, _parent2):
     _children2 = Individual(INDIVIDUAL_PARAMETERS, gene2)
     return _children1, _children2
 
-MODEL = Model()
+MODEL = Model(TEST_MODE)
 
 POPULATION = Population(INDIVIDUAL_PARAMETERS, POPULATION_SIZE)
 
 # Remove all invalid individual (invalid CNN model structure)
 for _i in range(POPULATION_SIZE):
-    POPULATION.populace[_i].evaluate()
+    POPULATION.populace[_i].evaluate(MODEL)
     while POPULATION.populace[_i].fitness == 0:
         POPULATION.populace[_i] = Individual(INDIVIDUAL_PARAMETERS)
-        POPULATION.populace[_i].evaluate()
+        POPULATION.populace[_i].evaluate(MODEL)
 POPULATION.calculate_ajusted_fitness()
 
 TRACKER = Tracker(STOP_CONDITION)
