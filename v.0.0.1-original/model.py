@@ -1,9 +1,9 @@
 """
     Model Module to build neural network and train/test to evaluate individual
 """
+from random import random
 from sklearn.utils import shuffle
 import tensorflow as tf
-from random import random
 from tensorflow.keras.datasets import mnist
 from tensorflow.keras import layers, models, regularizers, optimizers
 from tensorflow.keras.utils import to_categorical

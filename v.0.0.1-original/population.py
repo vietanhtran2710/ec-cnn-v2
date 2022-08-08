@@ -29,34 +29,33 @@ def get_similarity(individual1, individual2):
         if num1 == num2:
             same_count += 1
 
-        ck1 = individual1.get_kernels_num(nc1)
-        ck2 = individual2.get_kernels_num(nc2)
-        same_count += count_same_element(ck1, ck2)
-        cs1 = individual1.get_kernel_sizes(nc1)
-        cs2 = individual2.get_kernel_sizes(nc2)
-        same_count += count_same_element(cs1, cs2)
-        cp1 = individual1.get_pooling(nc1)
-        cp2 = individual2.get_pooling(nc2)
-        same_count += count_same_element(cp1, cp2)
-        ca1 = individual1.get_convol_activation(nc1)
-        ca2 = individual2.get_convol_activation(nc2)
-        same_count += count_same_element(ca1, ca2)
-
-        dt1 = individual1.get_dense_type(nd1)
-        dt2 = individual2.get_dense_type(nd2)
-        same_count += count_same_element(dt1, dt2)
-        dn1 = individual1.get_neurons_num(nd1)
-        dn2 = individual2.get_neurons_num(nd2)
-        same_count += count_same_element(dn1, dn2)
-        da1 = individual1.get_dense_activation(nd1)
-        da2 = individual2.get_dense_activation(nd2)
-        same_count += count_same_element(da1, da2)
-        dr1 = individual1.get_regularization(nd1)
-        dr2 = individual2.get_regularization(nd2)
-        same_count += count_same_element(dr1, dr2)
-        dd1 = individual1.get_dropout(nd1)
-        dd2 = individual2.get_dropout(nd2)
-        same_count += count_same_element(dd1, dd2)
+        same_count += count_same_element(
+            individual1.get_kernels_num(nc1),
+            individual2.get_kernels_num(nc2))
+        same_count += count_same_element(
+            individual1.get_kernel_sizes(nc1),
+            individual2.get_kernel_sizes(nc2))
+        same_count += count_same_element(
+            individual1.get_pooling(nc1),
+            individual2.get_pooling(nc2))
+        same_count += count_same_element(
+            individual1.get_convol_activation(nc1),
+            individual2.get_convol_activation(nc2))
+        same_count += count_same_element(
+            individual1.get_dense_type(nd1),
+            individual2.get_dense_type(nd2))
+        same_count += count_same_element(
+            individual1.get_neurons_num(nd1),
+            individual2.get_neurons_num(nd2))
+        same_count += count_same_element(
+            individual1.get_dense_activation(nd1),
+            individual2.get_dense_activation(nd2))
+        same_count += count_same_element(
+            individual1.get_regularization(nd1),
+            individual2.get_regularization(nd2))
+        same_count += count_same_element(
+            individual1.get_dropout(nd1),
+            individual2.get_dropout(nd2))
         return same_count / properies_num
     return 0
 

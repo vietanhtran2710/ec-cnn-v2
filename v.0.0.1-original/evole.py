@@ -3,11 +3,11 @@
     This module will be used to run on Google Colab
 """
 from random import randint
+import sys
 from tracker import Tracker
 from individual import Individual
 from population import Population
 from model import Model
-import sys
 
 POPULATION_SIZE = 50
 MAXIMUM_GENERATION = 10
@@ -18,7 +18,7 @@ MAX_POINTS = 10 # Maximum number of points in multipoints crossover
 MUTATION_RATE = 0.015
 ELITE_SIZE = 1
 GENE_LENGTH = 67
-TEST_MODE = True if len(sys.argv) >= 2 else False
+TEST_MODE = len(sys.argv) >= 2
 
 LEARNING_RATE_DICT = {
     0: 1 * 10 ** (-5), 1: 5 * 10 ** (-5),
