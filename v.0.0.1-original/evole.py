@@ -18,7 +18,7 @@ MAX_POINTS = 10 # Maximum number of points in multipoints crossover
 MUTATION_RATE = 0.015
 ELITE_SIZE = 1
 GENE_LENGTH = 67
-TEST_MODE = len(sys.argv) >= 2
+TEST_MODE = sys.argv[1] == "-t"
 
 LEARNING_RATE_DICT = {
     0: 1 * 10 ** (-5), 1: 5 * 10 ** (-5),
