@@ -1,5 +1,5 @@
 """
-    Evolutionary Computing Module - Modified Original Approach
+    Evolutionary Computing Module - Population Merging Method
     This module will be used to run on Google Colab
 """
 from random import randint
