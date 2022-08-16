@@ -112,7 +112,7 @@ for _i in range(1, MAXIMUM_GENERATION):
     # Create offsrping for next generation by crossover then mutate
     next_generation = []
     for j in range(0, POPULATION_SIZE, 2):
-        parent1, parent2 = pool[j], pool[j + 1]
+        parent1, parent2 = pool[j], pool[(j + 1) % POPULATION_SIZE]
         children1, children2 = crossover(parent1, parent2)
         children1.mutate()
         children2.mutate()
