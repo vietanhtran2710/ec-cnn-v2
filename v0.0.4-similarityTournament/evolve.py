@@ -42,20 +42,22 @@ ACTIVATION_DICT = {
 
 INDIVIDUAL_PARAMETERS = [GENE_LENGTH, ACTIVATION_DICT, DENSE_TYPE_DICT, LEARNING_RATE_DICT]
 
-def tournament_selection(current_population):
+def fitness_tournament_selection(current_population):
     """
         Tournament Selection for Parent Pool Selecting Phase
         Choose 3 random individual from the population with replacement
         The individual with highest adjusted fitness win the tournament, get added to the pool
     """
-    selected, max_fitness = None, 0
+    index, selected, max_fitness = 0, None, 0
     while selected is None:
-        for _i in range(TOURNAMENT_SIZE):
-            contestant = current_population[randint(0, POPULATION_SIZE - 1)]
+        indexes = sample([i for i in range(POPULATION_SIZE)], TOURNAMENT_SIZE)
+        for i in range(TOURNAMENT_SIZE):
+            contestant = current_population[indexes[i]]
             if contestant.adjusted_fitness > max_fitness:
                 selected = contestant
+                index = indexes[i]
                 max_fitness = contestant.adjusted_fitness
-    return selected
+    return index, selected
 
 def similarity_tournament_selection(population, ind, index):
     index, selected, min_similarity = 0, None, 2
@@ -122,9 +124,9 @@ for _i in range(1, MAXIMUM_GENERATION):
     # Create parent pool for mating by tournament selection
     pool = []
     for j in range(POPULATION_SIZE):
-        ind, firstParent = fitness_tournament_selection(population.populace)
+        ind, firstParent = fitness_tournament_selection(POPULATION.populace)
         pool.append(firstParent)
-        ind2, secondParent = similarity_tournament_selection(population.populace, firstParent, ind)
+        ind2, secondParent = similarity_tournament_selection(POPULATION.populace, firstParent, ind)
         pool.append(secondParent)
 
     # Create offsrping for next generation by crossover then mutate
