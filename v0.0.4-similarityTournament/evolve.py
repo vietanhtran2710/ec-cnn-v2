@@ -2,7 +2,7 @@
     Evolutionary Computing Module - Population Merging Method
     This module will be used to run on Google Colab
 """
-from random import randint
+from random import randint, sample
 import sys
 from tracker import Tracker
 from individual import Individual
@@ -65,7 +65,7 @@ def similarity_tournament_selection(population, ind, index):
         indexes = sample(a, TOURNAMENT_SIZE)
         for i in range(TOURNAMENT_SIZE):
             contestant = population[indexes[i]]
-            simi = get_similarity(ind, contestant)
+            simi = population.get_similarity(ind, contestant)
             if simi < min_similarity:
                 selected = contestant
                 index = indexes[i]
