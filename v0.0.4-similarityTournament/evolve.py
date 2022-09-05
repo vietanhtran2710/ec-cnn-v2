@@ -6,7 +6,7 @@ from random import randint, sample
 import sys
 from tracker import Tracker
 from individual import Individual
-from population import Population
+from population import Population, get_similarity
 from model import Model
 
 POPULATION_SIZE = 50
@@ -66,8 +66,8 @@ def similarity_tournament_selection(population, ind, index):
         a.remove(index)
         indexes = sample(a, TOURNAMENT_SIZE)
         for i in range(TOURNAMENT_SIZE):
-            contestant = population[indexes[i]]
-            simi = population.get_similarity(ind, contestant)
+            contestant = population.populace[indexes[i]]
+            simi = get_similarity(ind, contestant)
             if simi < min_similarity:
                 selected = contestant
                 index = indexes[i]
@@ -126,7 +126,7 @@ for _i in range(1, MAXIMUM_GENERATION):
     for j in range(POPULATION_SIZE):
         ind, firstParent = fitness_tournament_selection(POPULATION.populace)
         pool.append(firstParent)
-        ind2, secondParent = similarity_tournament_selection(POPULATION.populace, firstParent, ind)
+        ind2, secondParent = similarity_tournament_selection(POPULATION, firstParent, ind)
         pool.append(secondParent)
 
     # Create offsrping for next generation by crossover then mutate
